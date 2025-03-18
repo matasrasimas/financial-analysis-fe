@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 
 #root {
     display: flex;
@@ -7,11 +8,11 @@
     min-height: 100vh;
     width: 100%;
     text-align: center;
+    --roboto-font: "Roboto", sans-serif;
+    --navbar-item-on-hover-bg: #00978b;
 }
 
 * {
-    margin: 0;
-    padding: 0;
     box-sizing: border-box;
 }
 
