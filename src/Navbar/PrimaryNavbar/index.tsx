@@ -66,9 +66,6 @@ const PrimaryNavbar = () => {
                     <h3 className="text-white text-[18px] font-(family-name:--roboto-font)">Atsijungti</h3>
                 </li>
             </ul>
-            <Link to='/emails' className="absolute right-3">
-                <FontAwesomeIcon icon={faEnvelope} className="text-white text-[28px] hover:text-[32px]"/>
-            </Link>
         </nav>
     );
 }

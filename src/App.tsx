@@ -5,13 +5,14 @@ import Home from "./pages/Home";
 import Transactions from "./pages/Transactions";
 import Profile from "./pages/Profile";
 import Export from "./pages/Export";
-import Emails from "./pages/Emails";
 import AutomaticTransactions from "./pages/AutomaticTransactions";
 import ImageTransactions from "./pages/ImageTransactions";
 import Organization from "./pages/Organization";
 import NotFound from "./pages/NotFound";
 import OrgUnitEdit from "./pages/Organization/OrgUnitEdit";
 import OrgUnitCreate from "./pages/Organization/OrgUnitCreate";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 const App = () => {
     const location = useLocation();
@@ -22,7 +23,6 @@ const App = () => {
         "/organization",
         "/profile",
         "/export",
-        "/emails",
         "/automatic-transactions",
         "/image-transactions",
         "/org-units/:id",
@@ -40,11 +40,12 @@ const App = () => {
                 <Route path="/organization" element={<Organization/>}/>
                 <Route path="/profile" element={<Profile/>}/>
                 <Route path="/export" element={<Export/>}/>
-                <Route path="/emails" element={<Emails/>}/>
                 <Route path="/automatic-transactions" element={<AutomaticTransactions/>}/>
                 <Route path="/image-transactions" element={<ImageTransactions/>}/>
                 <Route path="/org-units/:id" element={<OrgUnitEdit/>}/>
                 <Route path="/org-unit-create" element={<OrgUnitCreate/>}/>
+                <Route path='/login' element={<Login/>}/>
+                <Route path='/register' element={<Register/>}/>
                 <Route path='*' element={<NotFound/>}/>
             </Routes>
         </>
