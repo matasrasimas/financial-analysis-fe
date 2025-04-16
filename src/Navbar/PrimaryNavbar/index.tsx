@@ -1,19 +1,33 @@
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faBars, faChartSimple, faEnvelope, faUserCircle} from "@fortawesome/free-solid-svg-icons";
+import {faBars, faChartSimple, faUserCircle} from "@fortawesome/free-solid-svg-icons";
 import {useState} from "react";
-import {Link, NavLink} from "react-router-dom";
+import {Link, NavLink, useNavigate} from "react-router-dom";
+import {useAuth} from "../../auth/AuthContext.tsx";
+import Cookies from "js-cookie";
 
 const PrimaryNavbar = () => {
+    const { user, setIsAuthenticated, setUser, setOrganization, setOrgUnit } = useAuth();
+    const navigate = useNavigate();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
     }
 
+    const handleLogout = () => {
+        Cookies.remove("jwt");
+        Cookies.remove("active-org-unit");
+        setIsAuthenticated(false);
+        setUser(null);
+        setOrganization(null);
+        setOrgUnit(null);
+        navigate('/login');
+    };
+
     return (
         <nav className="flex items-center flex-row bg-[#00473b] w-full h-[48px] relative">
             <div
-                className="flex items-center justify-center flex-row border-r-[3px] border-r-[#00373b] w-[360px] h-full gap-5">
+                className="flex items-center justify-center flex-row border-r-[3px] border-r-[#00373b] w-[390px] h-full gap-5">
                 <div className="lg:block hidden">
                     <FontAwesomeIcon icon={faChartSimple} className="text-white text-[30px]"/>
                 </div>
@@ -29,7 +43,11 @@ const PrimaryNavbar = () => {
                             onClick={() => setIsMenuOpen(!isMenuOpen)}
                             to="/profile"
                             className="flex items-center px-5 border-b-black border-b-[3px] py-1 justify-center hover:font-bold">
-                            <h3 className="text-black text-[18px] font-(family-name:--roboto-font)">Vardenis Pavardenis</h3>
+                            {user && (
+                                <h3 className="text-white text-[18px] font-(family-name:--roboto-font)">
+                                    {user.firstName} {user.lastName}
+                                </h3>
+                            )}
                         </Link>
                         <Link
                             onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -38,7 +56,7 @@ const PrimaryNavbar = () => {
                             <h3 className="text-black text-[18px] font-(family-name:--roboto-font)">Organizacija</h3>
                         </Link>
                         <li
-                            onClick={() => setIsMenuOpen(!isMenuOpen)}
+                            onClick={handleLogout}
                             className="flex items-center px-5 py-1 justify-center hover:font-bold cursor-pointer">
                             <h3 className="text-black text-[18px] font-(family-name:--roboto-font)">Atsijungti</h3>
                         </li>
@@ -54,7 +72,11 @@ const PrimaryNavbar = () => {
                     <div className="lg:block hidden">
                         <FontAwesomeIcon icon={faUserCircle} className="text-white text-[25px]"/>
                     </div>
-                    <h3 className="text-white text-[18px] font-(family-name:--roboto-font)">Vardenis Pavardenis</h3>
+                    {user && (
+                        <h3 className="text-white text-[18px] font-(family-name:--roboto-font)">
+                            {user.firstName} {user.lastName}
+                        </h3>
+                    )}
                 </NavLink>
 
                 <NavLink
@@ -62,10 +84,13 @@ const PrimaryNavbar = () => {
                     className={({ isActive }) => `flex items-center px-5 hover:bg-(--navbar-item-on-hover-bg) ${isActive && 'bg-(--navbar-item-on-hover-bg)'}`}>
                     <h3 className="text-white text-[18px] font-(family-name:--roboto-font)">Organizacija</h3>
                 </NavLink>
-                <li className="flex items-center px-5 hover:bg-(--navbar-item-on-hover-bg) cursor-pointer">
-                    <h3 className="text-white text-[18px] font-(family-name:--roboto-font)">Atsijungti</h3>
-                </li>
             </ul>
+            <li
+                className="flex items-center px-5 hover:bg-(--navbar-item-on-hover-bg) cursor-pointer h-[48px]"
+                onClick={handleLogout}
+            >
+                <h3 className="text-white text-[18px] font-(family-name:--roboto-font)">Atsijungti</h3>
+            </li>
         </nav>
     );
 }

@@ -1,4 +1,4 @@
-import {Transaction} from "../../../../types.ts";
+import {Transaction, TransactionError} from "../../../../types.ts";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCoins} from "@fortawesome/free-solid-svg-icons";
 import {useState} from "react";
@@ -11,9 +11,34 @@ const TransactionEditForm = ({
 }) => {
 
     const [editedTransaction, setEditedTransaction] = useState({...transactionToEdit});
+    const [transactionError, setTransactionError] = useState<TransactionError>({
+        amount: '',
+        title: '',
+        createdAt: ''
+    });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setEditedTransaction({...editedTransaction, [e.target.name]: e.target.value});
+        const { name, value } = e.target;
+        setEditedTransaction(prev => ({
+            ...prev,
+            [name]: name === "amount" ? parseFloat(value) : value
+        }));
+    }
+
+    const validateInput = () => {
+        const errors: TransactionError = {
+            amount: editedTransaction.amount == 0 ? 'error' : '',
+            title: editedTransaction.title.length == 0 ? 'error' : '',
+            createdAt: editedTransaction.createdAt.length == 0 ? 'error' : ''
+        }
+        setTransactionError(errors)
+        return Object.values(errors).every(error => error === '');
+    }
+
+    const submitForm = () => {
+        if (validateInput()) {
+            handleEdit(editedTransaction);
+        }
     }
 
     return (
@@ -27,9 +52,8 @@ const TransactionEditForm = ({
                     name='amount'
                     value={editedTransaction.amount}
                     onChange={handleChange}
-                    className={`font-bold w-full text-center border-b-3 border-black outline-none appearance-none ${
-                        editedTransaction.amount > 0 ? 'text-green-600' : 'text-red-600'
-                    }`}
+                    className={`font-bold w-full text-center border-b-3 outline-none appearance-none ${
+                        editedTransaction.amount > 0 ? 'text-green-600' : 'text-red-600'} ${transactionError.amount ? 'border-red-500' : 'border-black'}`}
                 />
 
 
@@ -40,22 +64,28 @@ const TransactionEditForm = ({
                     name='title'
                     value={editedTransaction.title}
                     onChange={handleChange}
-                    className='font-bold self-center text-[25px] w-full text-center border-b-3 border-black outline-none appearance-none'
+                    className={`font-bold self-center text-[25px] w-full text-center border-b-3 outline-none appearance-none ${transactionError.title ? 'border-red-500' : 'border-black'}`}
                 />
                 <input
                     type='text'
                     name='description'
                     value={editedTransaction.description}
                     onChange={handleChange}
-                    className='text-[20px] w-full text-center w-4/5 border-b-3 border-black outline-none appearance-none'
+                    className='text-[20px] w-full text-center border-b-3 border-black outline-none appearance-none'
                 />
             </div>
             <div className='flex flex-col justify-between gap-5 w-1/5 items-end'>
-                <h3 className='text-gray-500 text-[20px]'>{transactionToEdit.createdAt}</h3>
+                <input
+                    type='date'
+                    name='createdAt'
+                    value={editedTransaction.createdAt}
+                    onChange={handleChange}
+                    className={`text-[20px] w-full text-center border-b-3 outline-none appearance-none ${transactionError.createdAt ? 'border-red-500' : 'border-black'}`}
+                />
                 <div className='flex flex-row justify-center'>
                     <button
                         className='bg-blue-500 text-white font-bold w-[100px] h-[30px] border-white border-2 cursor-pointer hover:text-yellow-300'
-                        onClick={() => handleEdit(editedTransaction)}>Save</button>
+                        onClick={() => submitForm()}>Saugoti</button>
                 </div>
             </div>
 

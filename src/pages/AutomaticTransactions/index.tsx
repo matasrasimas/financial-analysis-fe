@@ -1,74 +1,109 @@
-import {AutomaticTransaction, CreateAutomaticTransaction, CreateTransaction} from "../../types.ts";
-import {useState} from "react";
+import {AutomaticTransaction, CreateAutomaticTransaction} from "../../types.ts";
+import React, {useEffect, useState} from "react";
 import AutomaticTransactionCard from "./AutomaticTransactionCard";
 import {faArrowLeft, faCirclePlus} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {Link} from "react-router-dom";
-import TransactionCreateForm from "../Transactions/TransactionCreateForm";
 import AutomaticTransactionCreateForm from "./AutomaticTransactionCreateForm";
+import {useAuth} from "../../auth/AuthContext.tsx";
+import Cookies from "js-cookie";
 
 const AutomaticTransactionsIcons = () => {
-    const [automaticTransactions, setAutomaticTransactions] = useState<AutomaticTransaction[]>([
-        {
-            id: crypto.randomUUID(),
-            amount: 50,
-            title: 'automatic-transaction-1',
-            description: 'automatic-transaction-description-1',
-            latestTransactionDate: '2025-02-01',
-            durationMinutes: 620,
-            durationUnit: 'minutes'
-        },
-        {
-            id: crypto.randomUUID(),
-            amount: 120,
-            title: 'automatic-transaction-2',
-            description: 'automatic-transaction-description-2',
-            latestTransactionDate: '2025-02-06',
-            durationMinutes: 620,
-            durationUnit: 'minutes'
-        },
-        {
-            id: crypto.randomUUID(),
-            amount: 50,
-            title: 'automatic-transaction-3',
-            description: 'automatic-transaction-description-3',
-            latestTransactionDate: '2025-02-01',
-            durationMinutes: 620,
-            durationUnit: 'minutes'
-        }
-    ]);
+    const [automaticTransactions, setAutomaticTransactions] = useState<AutomaticTransaction[]>([]);
     const [showCreateTransactionForm, setShowCreateTransactionForm] = useState(false);
+    const {orgUnit} = useAuth();
 
-    const handleTransactionDelete = (id: string) => {
-        setAutomaticTransactions(automaticTransactions.filter(transaction => transaction.id !== id));
+    useEffect(() => {
+        const fetchTransactions = async () => {
+            try {
+                const response = await fetch(`http://localhost:8080/api/org-units/${orgUnit.id}/automatic-transactions`, {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${Cookies.get('jwt')}`,
+                        "Content-Type": "application/json",
+                    },
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    setAutomaticTransactions(data);
+                }
+            } catch (error) {
+                console.error("Error fetching transactions:", error);
+            }
+        };
+
+        fetchTransactions();
+    }, [orgUnit.id]);
+
+    const handleTransactionDelete = async (id: string) => {
+        try {
+            const response = await fetch(`http://localhost:8080/api/automatic-transactions/${id}`, {
+                method: "DELETE",
+                headers: {
+                    "Authorization": `Bearer ${Cookies.get('jwt')}`,
+                    "Content-Type": "application/json",
+                },
+            });
+            if (response.ok) {
+                setAutomaticTransactions(automaticTransactions.filter((transaction) => transaction.id !== id));
+            }
+        } catch(e) {
+            console.log(e);
+        }
     }
 
-    const handleTransactionCreate = (transactionToCreate: CreateAutomaticTransaction) => {
-        setAutomaticTransactions([
-            {
-                id: crypto.randomUUID(),
-                amount: transactionToCreate.amount,
-                title: transactionToCreate.title,
-                description: transactionToCreate.description,
-                latestTransactionDate: new Date().toISOString().split("T")[0],
-                durationMinutes: transactionToCreate.durationMinutes,
-                durationUnit: transactionToCreate.durationUnit
-            },
-            ...automaticTransactions
-        ]);
+    const handleTransactionCreate = async (transactionToCreate: CreateAutomaticTransaction) => {
+        try {
+            const response = await fetch('http://localhost:8080/api/automatic-transactions', {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${Cookies.get('jwt')}`,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(
+                    {
+                        orgUnitId: transactionToCreate.orgUnitId,
+                        amount: transactionToCreate.amount,
+                        title: transactionToCreate.title,
+                        description: transactionToCreate.description.length == 0 ? null : transactionToCreate.description,
+                        duration: transactionToCreate.duration,
+                        durationUnit: transactionToCreate.durationUnit,
+                    }
+                )
+            });
 
-        setShowCreateTransactionForm(false);
+            if (response.ok) {
+                const data = await response.json();
+                setAutomaticTransactions([
+                    {
+                        id: data.id,
+                        orgUnitId: data.orgUnitId,
+                        amount: data.amount,
+                        title: data.title,
+                        description: data.description && data.description.length == 0 ? null : data.description,
+                        duration: data.duration,
+                        durationUnit: data.durationUnit,
+                    },
+                    ...automaticTransactions
+                ]);
+                setShowCreateTransactionForm(false);
+            }
+        } catch(e) {
+            console.error(e);
+        }
     }
 
     return (
-        <div className='flex flex-col w-full mt-10 items-center'>
+        <div className='flex flex-col w-full mt-10 items-center relative'>
+            <h2 className="main-header text-[2em] sm:text-[3em]">Automatinės Transakcijos</h2>
             <Link
                 to='/transactions'
-                className='flex flex-row gap-3 font-bold text-[25px] underline underline-offset-2 self-start ml-10 hover:text-blue-500'>
+                className='flex absolute gap-3 font-bold text-[25px] underline underline-offset-2 self-start ml-10 hover:text-blue-500'>
                 <div className='block'>
                     <FontAwesomeIcon icon={faArrowLeft} />
                 </div>
-                <h2>Go back</h2>
+                <h2>Atgal</h2>
             </Link>
 
             {!showCreateTransactionForm && (
@@ -82,17 +117,6 @@ const AutomaticTransactionsIcons = () => {
                 </div>
 
             )}
-            {/*{!showCreateTTransactionForm && (*/}
-            {/*    <div className='flex flex-row w-4/5 items-center justify-center mt-6'>*/}
-            {/*        <FontAwesomeIcon*/}
-            {/*            onClick={() => {*/}
-            {/*                setShowCreateTTransactionForm(true)*/}
-            {/*            }}*/}
-            {/*            className='text-[80px] cursor-pointer'*/}
-            {/*            icon={faCirclePlus}/>*/}
-            {/*    </div>*/}
-
-            {/*)}*/}
 
             <div className='flex flex-col w-full items-center gap-10 my-10'>
                 {showCreateTransactionForm && (

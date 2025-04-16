@@ -13,6 +13,10 @@ import OrgUnitEdit from "./pages/Organization/OrgUnitEdit";
 import OrgUnitCreate from "./pages/Organization/OrgUnitCreate";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import ProtectedRoute from "./auth/ProtectedRoute.tsx";
+import {AuthProvider} from "./auth/AuthContext.tsx";
+import UnprotectedRoute from "./auth/UnprotectedRoute.tsx";
+import OrganizationCreate from "./pages/OrganizationCreate";
 
 const App = () => {
     const location = useLocation();
@@ -32,23 +36,27 @@ const App = () => {
     const isNavbarVisible = validRoutes.some((route) => matchPath(route, location.pathname))
 
     return (
-        <>
-            {isNavbarVisible && <Navbar/>}
+        <AuthProvider>
+            {/*{isNavbarVisible && <Navbar />}*/}
             <Routes>
-                <Route path="/" element={<Home/>} />
-                <Route path="/transactions" element={<Transactions/>}/>
-                <Route path="/organization" element={<Organization/>}/>
-                <Route path="/profile" element={<Profile/>}/>
-                <Route path="/export" element={<Export/>}/>
-                <Route path="/automatic-transactions" element={<AutomaticTransactions/>}/>
-                <Route path="/image-transactions" element={<ImageTransactions/>}/>
-                <Route path="/org-units/:id" element={<OrgUnitEdit/>}/>
-                <Route path="/org-unit-create" element={<OrgUnitCreate/>}/>
-                <Route path='/login' element={<Login/>}/>
-                <Route path='/register' element={<Register/>}/>
-                <Route path='*' element={<NotFound/>}/>
+                {/* Protected Routes */}
+                <Route path="/" element={<ProtectedRoute><Home/></ProtectedRoute>} />
+                <Route path="/transactions" element={<ProtectedRoute><Transactions /></ProtectedRoute>} />
+                <Route path="/organization" element={<ProtectedRoute><Organization /></ProtectedRoute>} />
+                <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+                <Route path="/export" element={<ProtectedRoute><Export /></ProtectedRoute>} />
+                <Route path="/automatic-transactions" element={<ProtectedRoute><AutomaticTransactions /></ProtectedRoute>} />
+                <Route path="/image-transactions" element={<ProtectedRoute><ImageTransactions /></ProtectedRoute>} />
+                <Route path="/org-units/:id" element={<ProtectedRoute><OrgUnitEdit /></ProtectedRoute>} />
+                <Route path="/org-unit-create" element={<ProtectedRoute><OrgUnitCreate /></ProtectedRoute>} />
+                <Route path="/organization-create" element={<OrganizationCreate />} />
+
+                {/* Public Routes */}
+                <Route path="/login" element={<UnprotectedRoute><Login /></UnprotectedRoute>} />
+                <Route path="/register" element={<UnprotectedRoute><Register /></UnprotectedRoute>} />
+                <Route path="*" element={<NotFound />} />
             </Routes>
-        </>
+        </AuthProvider>
     );
 }
 

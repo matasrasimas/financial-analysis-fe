@@ -1,30 +1,63 @@
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {
+    faArrowLeft,
     faHashtag,
     faLocationDot,
     faMessage,
     faPlus,
     faXmark
 } from "@fortawesome/free-solid-svg-icons";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {useState} from "react";
 import type {OrgUnitCreate} from "../../../types.ts";
+import {useAuth} from "../../../auth/AuthContext.tsx";
+import Cookies from "js-cookie";
 
 const OrgUnitCreate = () => {
+    const {organization} = useAuth();
     const navigate = useNavigate();
 
     const [orgUnitToCreate, setOrgUnitToCreate] = useState<OrgUnitCreate>({
+        orgId: organization.id,
         title: '',
         code: '',
         address: ''
     });
+    const [orgUnitTitleError, setOrgUnitTitleError] = useState<string>('');
 
     const handleOrgUnitChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setOrgUnitToCreate((prev) => prev ? {...prev, [e.target.name]: e.target.value} : prev);
     };
 
-    const handleOrgUnitCreate = () => {
-        navigate("/organization")
+    const validateFields = () => {
+        const error = orgUnitToCreate.title.length == 0 ? 'error' : ''
+        setOrgUnitTitleError(error)
+        return error == ''
+    };
+
+    const handleOrgUnitCreate = async () => {
+        if (validateFields()) {
+            try {
+                const response = await fetch('http://localhost:8080/api/org-units', {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Bearer ${Cookies.get('jwt')}`,
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        orgId: orgUnitToCreate.orgId,
+                        title: orgUnitToCreate.title,
+                        code: orgUnitToCreate.code && orgUnitToCreate.code.length == 0 ? null : orgUnitToCreate.code,
+                        address: orgUnitToCreate.address && orgUnitToCreate.address.length == 0 ? orgUnitToCreate.address : null,
+                    })
+                });
+                if (response.ok) {
+                    window.location.href = '/organization';
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
     }
 
     const handleOrgUnitCreateCancellation = () => {
@@ -32,7 +65,15 @@ const OrgUnitCreate = () => {
     }
 
     return (
-        <div className="flex flex-col gap-5 items-center justify-center w-full">
+        <div className="flex flex-col gap-5 items-center justify-center w-full relative">
+            <Link
+                to='/organization'
+                className='flex flex-row gap-3 font-bold text-[25px] underline underline-offset-2 self-start ml-10 hover:text-blue-500 absolute top-5'>
+                <div className='block'>
+                    <FontAwesomeIcon icon={faArrowLeft} />
+                </div>
+                <h2>Atgal</h2>
+            </Link>
             <div className="flex flex-col gap-5 mt-5">
                 <h2 className="main-header text-[2em] md:text-[3em]">Padalinio kūrimas:</h2>
                 <div className="flex flex-col justify-center items-center gap-5 text-[16px] sm:text-[22px] mb-10">
@@ -49,7 +90,8 @@ const OrgUnitCreate = () => {
                                 name="title"
                                 value={orgUnitToCreate.title}
                                 onChange={handleOrgUnitChange}
-                                className="font-sans font-bold border-b-[3px] focus:outline-none w-[150px] sm:w-[250px] md:w-[400px] text-center"
+                                className={`font-sans font-bold border-b-[3px] focus:outline-none w-[150px] sm:w-[250px]
+                                md:w-[400px] text-center ${orgUnitTitleError ? 'border-red-500' : 'border-black'}`}
                             />
                         </div>
                     </div>

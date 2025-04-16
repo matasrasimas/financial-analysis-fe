@@ -13,7 +13,7 @@ const Export = () => {
         exportTo: "",
     });
 
-    const [selectedPeriod, setSelectedPeriod] = useState<string>("Current week");
+    const [selectedPeriod, setSelectedPeriod] = useState<string>("Ši savaitė");
 
     const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setExportOptions((prevOptions) => ({
@@ -30,19 +30,19 @@ const Export = () => {
         const period = e.target.value;
         setSelectedPeriod(period);
 
-        if (period !== "Custom period") {
+        if (period !== "Pasirinkti") {
             const today = new Date();
             let exportFrom = "";
             let exportTo = today.toISOString().split("T")[0];
 
-            if (period === "Current week") {
+            if (period === "Ši savaitė") {
                 const startOfWeek = new Date(today);
                 startOfWeek.setDate(today.getDate() - today.getDay());
                 exportFrom = startOfWeek.toISOString().split("T")[0];
-            } else if (period === "Current month") {
+            } else if (period === "Šis mėnuo") {
                 const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
                 exportFrom = startOfMonth.toISOString().split("T")[0];
-            } else if (period === "Previous month") {
+            } else if (period === "Praeitas mėnesis") {
                 const startOfLastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
                 const endOfLastMonth = new Date(today.getFullYear(), today.getMonth(), 0);
                 exportFrom = startOfLastMonth.toISOString().split("T")[0];
@@ -74,55 +74,56 @@ const Export = () => {
         <div className="flex flex-col w-full items-center justify-center mt-5 gap-10">
             <h2 className="main-header text-[2em] sm:text-[3em]">Ataskaitos eksportas</h2>
             <div
-                className="flex flex-col justify-center items-center gap-10 text-[16px] sm:text-[22px] mb-10 font-bold">
+                className="flex flex-col justify-center items-center gap-10 text-[16px] sm:text-[22px] mb-10">
 
-                <div className='flex flex-col gap-5 border-3 p-10'>
+                <div className='flex flex-col gap-5 border-3 p-10 font-bold'>
                     <div className="flex flex-row gap-3 items-center text-center">
                         <div className="flex w-[100px] sm:w-[150px]">
-                            <label htmlFor="period" className="font-sans">Period:</label>
+                            <label htmlFor="period" className="font-sans">Periodas:</label>
                         </div>
                         <select
                             id="period"
                             onChange={handlePeriodChange}
                             className="w-full p-3 border border-gray-300 rounded-full shadow-md focus:ring-2 focus:ring-green-500 focus:outline-none"
                         >
-                            <option>Current week</option>
-                            <option>Current month</option>
-                            <option>Previous month</option>
-                            <option>Custom period</option>
+                            <option>Ši savaitė</option>
+                            <option>Šis mėnuo</option>
+                            <option>Praeitas mėnesis</option>
+                            <option>Pasirinkti</option>
                         </select>
                     </div>
 
                     <div className="flex flex-row gap-4">
                         <div className="flex flex-col items-center">
-                            <label className="text-sm font-semibold">From:</label>
+                            <label className="text-sm font-semibold">Nuo:</label>
                             <input
                                 type="date"
                                 name="exportFrom"
                                 value={exportOptions.exportFrom}
                                 onChange={handleDateChange}
-                                disabled={selectedPeriod !== "Custom period"}
+                                disabled={selectedPeriod !== "Pasirinkti"}
                                 className="p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none disabled:bg-gray-200"
                             />
                         </div>
                         <div className="flex flex-col items-center">
-                            <label className="text-sm font-semibold">To:</label>
+                            <label className="text-sm font-semibold">Iki:</label>
                             <input
                                 type="date"
                                 name="exportTo"
                                 value={exportOptions.exportTo}
                                 onChange={handleDateChange}
-                                disabled={selectedPeriod !== "Custom period"}
+                                disabled={selectedPeriod !== "Pasirinkti"}
                                 className="p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none disabled:bg-gray-200"
                             />
                         </div>
                     </div>
                 </div>
 
-                <div className='flex flex-col gap-8'>
-                    {["option1", "option2", "option3"].map((option) => (
-                        <div key={option} className="flex flex-row gap-3 items-center text-center">
-                            <div className="flex w-[100px] sm:w-[150px]">
+                <div className='flex flex-col gap-8 w-full items-center justify-center'>
+                    <h2 className="main-header text-[2em] sm:text-[30px]">Eksporto pasirinkimai:</h2>
+                    {["pasirinkimas 1", "pasirinkimas 2", "pasirinkimas 3"].map((option) => (
+                        <div key={option} className="flex flex-row gap-3 items-center text-center w-full justify-center font-bold">
+                            <div className="flex w-[300px] sm:w-[200px]">
                                 <label htmlFor={option}
                                        className="font-sans capitalize">{option.replace("option", "Option ")}:</label>
                             </div>

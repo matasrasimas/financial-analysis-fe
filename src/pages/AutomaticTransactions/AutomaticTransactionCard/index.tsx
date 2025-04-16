@@ -4,6 +4,7 @@ import {faCoins, faMessage, faStopwatch} from "@fortawesome/free-solid-svg-icons
 import {useState} from "react";
 import AutomaticTransactionEditForm from "./AutomaticTransactionEditForm";
 import EditAndDeleteIcons from "../../../common/EditAndDeleteIcons";
+import Cookies from "js-cookie";
 
 const AutomaticTransactionCard = (
     {
@@ -18,9 +19,44 @@ const AutomaticTransactionCard = (
     const [automaticTransactionData, setAutomaticTransactionData] = useState(automaticTransaction);
     const [isEditing, setIsEditing] = useState(false);
 
-    const handleTransactionEdit = (updatedTransaction: AutomaticTransaction) => {
-        setAutomaticTransactionData(updatedTransaction);
-        setIsEditing(false);
+    const handleTransactionEdit = async (updatedTransaction: AutomaticTransaction) => {
+        try {
+            const response = await fetch('http://localhost:8080/api/automatic-transactions', {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${Cookies.get('jwt')}`,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(
+                    {
+                        id: updatedTransaction.id,
+                        orgUnitId: updatedTransaction.orgUnitId,
+                        amount: updatedTransaction.amount,
+                        title: updatedTransaction.title,
+                        description: updatedTransaction.description && updatedTransaction.description.length == 0 ? null : updatedTransaction.description,
+                        duration: updatedTransaction.duration,
+                        durationUnit: updatedTransaction.durationUnit,
+                    }
+                )
+            });
+
+            if (response.ok) {
+                setAutomaticTransactionData(updatedTransaction);
+                setIsEditing(false);
+            }
+        } catch(e) {
+            console.error(e);
+        }
+    }
+
+    const mapDurationUnitToLT = (): string => {
+        if (automaticTransactionData.durationUnit == 'MINUTES')
+            return 'minutės'
+        if (automaticTransactionData.durationUnit == 'HOURS')
+            return 'valandos'
+        if (automaticTransactionData.durationUnit == 'DAYS')
+            return 'dienos'
+        return ''
     }
 
     return isEditing ? (
@@ -34,8 +70,8 @@ const AutomaticTransactionCard = (
                 <div className='hidden md:block'>
                     <FontAwesomeIcon icon={faCoins}/>
                 </div>
-                <div className='flex flex-row gap-5 text-[20px] items-center justify-center sm:justify-start'>
-                    <h2 className='mr-[60px]'>Amount:</h2>
+                <div className='flex flex-row text-[20px] items-center justify-center sm:justify-start'>
+                    <h2 className='flex w-[175px]'>kiekis:</h2>
                     <h2 className={`font-bold ${automaticTransactionData.amount > 0 ? 'text-green-600' : 'text-red-600'}`}>
                         {automaticTransactionData.amount} €
                     </h2>
@@ -46,12 +82,12 @@ const AutomaticTransactionCard = (
                     <FontAwesomeIcon icon={faMessage}/>
                 </div>
                 <div className='flex flex-col justify-start items-start gap-2 text-[20px]'>
-                    <div className='flex flex-row: gap-3 items-start justify-center'>
-                        <h2 className='mr-[100px]'>Title:</h2>
+                    <div className='flex flex-row items-start justify-center'>
+                        <h2 className='flex w-[175px]'>Pavadinimas:</h2>
                         <h2 className='font-bold'>{automaticTransactionData.title}</h2>
                     </div>
-                    <div className='flex flex-row gap-3'>
-                        <h2 className='mr-[36px]'>Description:</h2>
+                    <div className='flex flex-row'>
+                        <h2 className='flex w-[175px]'>Komentaras:</h2>
                         <h2 className='font-bold'>{automaticTransactionData.description}</h2>
                     </div>
                 </div>
@@ -61,9 +97,9 @@ const AutomaticTransactionCard = (
                     <div className='hidden md:block'>
                         <FontAwesomeIcon icon={faStopwatch}/>
                     </div>
-                    <div className='flex flex-row gap-3'>
-                        <h2 className='mr-[56px]'>Duration:</h2>
-                        <h2 className='font-bold'>{automaticTransactionData.durationMinutes} {automaticTransactionData.durationUnit}</h2>
+                    <div className='flex flex-row'>
+                        <h2 className='flex w-[175px]'>Trukmė:</h2>
+                        <h2 className='font-bold'>{automaticTransactionData.duration} {mapDurationUnitToLT()}</h2>
                     </div>
                 </div>
                 <div className='hidden sm:block'>

@@ -3,15 +3,41 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCoins, faPenToSquare, faTrash} from "@fortawesome/free-solid-svg-icons";
 import {useState} from "react";
 import TransactionEditForm from "./TransactionEditForm";
+import Cookies from "js-cookie";
 
 
 const TransactionCard = ({ transaction, handleDelete } : { transaction: Transaction; handleDelete: (id: string) => void }) => {
     const [transactionData, setTransactionData] = useState(transaction);
     const [isEditing, setIsEditing] = useState(false);
 
-    const handleTransactionEdit = (updatedTransaction: Transaction) => {
-        setTransactionData(updatedTransaction);
-        setIsEditing(false);
+    const handleTransactionEdit = async (updatedTransaction: Transaction) => {
+        try {
+            const response = await fetch('http://localhost:8080/api/transactions', {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${Cookies.get('jwt')}`,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(
+                    [
+                        {
+                            id: updatedTransaction.id,
+                            orgUnitId: updatedTransaction.orgUnitId,
+                            amount: updatedTransaction.amount,
+                            title: updatedTransaction.title,
+                            description: updatedTransaction.description && updatedTransaction.description.length == 0 ? null : updatedTransaction.description,
+                            createdAt: updatedTransaction.createdAt,
+                        }
+                    ]
+                )
+            });
+            if (response.ok) {
+                setTransactionData(updatedTransaction);
+                setIsEditing(false);
+            }
+        } catch(e) {
+            console.error(e);
+        }
     }
 
     return isEditing ? (
