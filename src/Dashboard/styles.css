@@ -1,0 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+
+.dashboard-card-title {
+    font-family: 'Rubik', serif;
+    font-size: 14px;
+    letter-spacing: 1px;
+    font-weight: 600;
+    color: #00592b;
+}
+
+.stat-container {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    box-shadow: 0 0 10px #ccc;
+    padding-top:10px;
+}

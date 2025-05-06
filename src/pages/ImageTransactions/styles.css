@@ -1,3 +1,22 @@
+.image-transaction-container {
+    display: flex;
+    gap: 20px;
+    flex-direction: column;
+    width: 60%;
+    background-color: white;
+    box-shadow: 0 0 10px #ccc;
+    padding-top:10px;
+    padding-bottom:20px;
+}
+
+.image-transaction-container h2 {
+    font-family: 'Roboto', sans-serif;
+    font-size: 22px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    color: #00592b;
+}
+
 .spinner-container {
     display: flex;
     align-items: center;

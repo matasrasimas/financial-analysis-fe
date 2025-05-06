@@ -1,0 +1,12 @@
+.org-unit-select-container {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    box-shadow: 0 0 10px #ccc;
+}
+.filter-text {
+    font-family: 'Roboto', sans-serif;
+    font-weight: bold;
+    letter-spacing: 1px;
+    color: #00592b;
+}

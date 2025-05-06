@@ -1,18 +1,22 @@
 export type Transaction = {
     id: string,
     orgUnitId: string,
+    userId: string,
     amount: number,
     title: string,
     description: string,
-    createdAt: string
+    createdAt: string,
+    isLocked: boolean
 }
 
 export type CreateTransaction = {
     orgUnitId: string,
+    userId: string,
     amount: number,
     title: string,
     description: string,
-    createdAt: string
+    createdAt: string,
+    isLocked: boolean
 }
 
 export type TransactionError = {
@@ -28,7 +32,8 @@ export type AutomaticTransaction = {
     title: string,
     description: string,
     duration: number,
-    durationUnit: string
+    durationUnit: string,
+    nextTransactionDate: string
 }
 
 export type CreateAutomaticTransaction = {
@@ -60,6 +65,7 @@ export type Organization = {
     title: string,
     code: string,
     address: string,
+    yearlyGoal: number
 }
 
 export type OrganizationCreate = {
@@ -76,9 +82,6 @@ export type OrgUnitCreate = {
 }
 
 export type ExportOptions = {
-    option1: boolean,
-    option2: boolean,
-    option3: boolean,
     exportFrom: string,
     exportTo: string,
 }
@@ -108,7 +111,6 @@ export type UserLogin = {
 export type UserProfileError = {
     firstName: string,
     lastName: string,
-    email: string,
     phoneNumber: string,
 }
 
@@ -126,4 +128,45 @@ export type TransactionFromFile = {
     amountError: string,
     titleError: string,
     createdAtError: string
+}
+
+export type Invitation = {
+    id: string,
+    senderId: string,
+    receiverId: string,
+    organizationId: string,
+    createdAt: string,
+    isAccepted: boolean
+}
+
+export type Statistics = {
+    from: string,
+    to: string,
+    xValues: string[],
+    previousYearYValues: number[],
+    currentYearYValues: number[],
+    currentYearNumberOfTransactions: number,
+    previousYearNumberOfTransactions: number,
+    goalCompletionPercentage: number,
+    currentYearTotalAmount: number,
+    previousYearTotalAmount: number,
+    top5MostFrequentTransactions: TransactionCountPair[],
+    mostProfitableMonth: string,
+    mostProfitableMonthAmount: number,
+    mostUnprofitableMonth: string,
+    mostUnprofitableMonthAmount: number,
+    averageTrendPercentage: number,
+    monthsByAmounts: MonthByAmount[],
+    currentYearTransactions: Transaction[]
+}
+
+export type TransactionCountPair = {
+    transaction: Transaction,
+    count: number
+}
+
+export type MonthByAmount = {
+    month: string,
+    amount: number,
+    sortIndex: number,
 }

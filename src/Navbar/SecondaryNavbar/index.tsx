@@ -46,12 +46,12 @@ const SecondaryNavbar = () => {
     }
 
     return (
-        <nav className="flex items-center flex-row bg-[#00776b] w-full h-[48px]">
+        <nav className="flex items-center flex-row bg-[#00776b] w-full h-[38px]">
             <div className="flex flex-col items-center justify-center border-r-[3px] border-r-[#00473b] w-[360px] h-full relative">
                 <div
-                    className="flex cursor-pointer hover:font-extrabold"
+                    className="flex cursor-pointer hover:font-extrabold items-center"
                     onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
-                    <h2 className="text-white md:text-[20px] text-[15px] font-(family-name:--roboto-font) mx-2">{orgUnit.title}</h2>
+                    <h2 className="text-white text-[18px] font-(family-name:--roboto-font) mx-2">{orgUnit.title}</h2>
                     <div>
                         <FontAwesomeIcon icon={isDropdownOpen ? faCaretUp : faCaretDown} className="text-white md:text-[30px] text-[25px]"/>
                     </div>
@@ -72,7 +72,7 @@ const SecondaryNavbar = () => {
             </div>
             <div className="md:hidden flex w-full ml-8 relative h-full">
                 <button onClick={toggleMenu}>
-                    <FontAwesomeIcon icon={faBars} className="text-white text-[25px] cursor-pointer"/>
+                    <FontAwesomeIcon icon={faBars} className="text-white text-[20px] cursor-pointer"/>
                 </button>
                 {isMenuOpen && (
                     <ul className="md:hidden flex flex-col border-black border-[3px] rounded-lg bg-gray-300 absolute top-10 w-[150px]">

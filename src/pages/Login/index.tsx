@@ -56,7 +56,7 @@ const Login = () => {
                 else if (response.status === 200) {
                     const data = await response.json();
                     Cookies.set("jwt", data.token);
-                    Cookies.set("active-org-unit", data.activeOrgUnit);
+                    Cookies.set("active-org", data.activeOrg);
                     window.location.href = '/';
                 }
 
@@ -68,24 +68,24 @@ const Login = () => {
 
     return (
         <div className='flex flex-row justify-center bg-[#00b795] w-full h-screen items-center'>
-            <div className='flex flex-col w-[500px] h-[450px] bg-white'>
+            <div className='flex flex-col w-[500px] h-[350px] bg-white'>
 
-                <div className='flex w-full h-[50px] bg-[#00574b] items-center justify-center'>
-                    <h2 className='text-white font-bold font-sans text-[20px]'>Prisijungimas</h2>
+                <div className='flex w-full h-[35px] bg-[#00574b] items-center justify-center'>
+                    <h2 className='text-white font-bold font-sans text-[16px]'>Prisijungimas</h2>
                 </div>
 
                 <form className='flex flex-col gap-3 mt-10' onSubmit={handleSubmit}>
-                    <div className='flex flex-col w-full h-[85px]'>
-                        <div className='flex flex-row w-full h-[55px] px-8'>
-                            <div className='bg-[#00574b] w-[55px] h-full flex justify-center items-center'>
-                                <FontAwesomeIcon icon={faEnvelope} className='text-white text-[25px]' />
+                    <div className='flex flex-col w-full h-[70px]'>
+                        <div className='flex flex-row w-full h-[40px] px-8'>
+                            <div className='bg-[#00574b] w-[40px] h-full flex justify-center items-center'>
+                                <FontAwesomeIcon icon={faEnvelope} className='text-white text-[20px]' />
                             </div>
                             <input
                                 type='email'
                                 name='email'
                                 value={userLogin.email}
                                 onChange={handleInputChange}
-                                className={`w-full h-full border-2 pl-5 text-[20px] ${userLoginError.email ? 'border-red-500' : 'border-gray-500'}`}
+                                className={`w-full h-full border-2 pl-5 text-[16px] ${userLoginError.email ? 'border-red-500' : 'border-gray-500'}`}
                                 placeholder='El. paštas'
                             />
                         </div>
@@ -94,17 +94,17 @@ const Login = () => {
                         )}
                     </div>
 
-                    <div className='flex flex-col w-full h-[85px]'>
-                        <div className='flex flex-row w-full h-[55px] px-8'>
-                            <div className='bg-[#00574b] w-[55px] h-full flex justify-center items-center'>
-                                <FontAwesomeIcon icon={faLock} className='text-white text-[25px]' />
+                    <div className='flex flex-col w-full h-[70px]'>
+                        <div className='flex flex-row w-full h-[40px] px-8'>
+                            <div className='bg-[#00574b] w-[40px] h-full flex justify-center items-center'>
+                                <FontAwesomeIcon icon={faLock} className='text-white text-[20px]' />
                             </div>
                             <input
                                 type='password'
                                 name='password'
                                 value={userLogin.password}
                                 onChange={handleInputChange}
-                                className={`w-full h-full border-2 pl-5 text-[20px] ${userLoginError.password ? 'border-red-500' : 'border-gray-500'}`}
+                                className={`w-full h-full border-2 pl-5 text-[16px] ${userLoginError.password ? 'border-red-500' : 'border-gray-500'}`}
                                 placeholder='Slaptažodis'
                             />
                         </div>
@@ -113,16 +113,16 @@ const Login = () => {
                         )}
                     </div>
 
-                    <div className='flex flex justify-center items-center w-full mb-10'>
+                    <div className='flex flex justify-center items-center w-full mb-5'>
                         <button
                             type='submit'
-                            className='bg-[#00574b] w-[200px] h-[50px] text-white font-bold text-[20px] rounded-md cursor-pointer hover:text-yellow-500'>
+                            className='bg-[#00574b] w-[150px] h-[30px] text-white font-bold text-[16px] rounded-md cursor-pointer hover:text-yellow-500'>
                             Prisijungti
                         </button>
                     </div>
                 </form>
 
-                <div className='flex flex-row w-full px-5 text-[20px] gap-2 items-center justify-center'>
+                <div className='flex flex-row w-full px-5 text-[16px] gap-2 items-center justify-center'>
                     <h2 className='break-words whitespace-normal'>Neturite paskyros?
                     </h2>
                     <Link

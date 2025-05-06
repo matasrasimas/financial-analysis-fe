@@ -14,7 +14,7 @@ const Home = () => {
         const month = now.getMonth();
 
         const monthFrom = new Date(year, month, 1);
-        const monthTo = new Date(year, month + 1, 0);
+        const monthTo = new Date(year, month + 1, 1);
 
         return {
             from: monthFrom.toISOString().split('T')[0],
@@ -89,14 +89,14 @@ const Home = () => {
             <div className="flex justify-between items-end mb-4 w-[850px]">
                 <div className='flex flex-row gap-5'>
                     <div>
-                        <p className="text-[40px] font-bold">{transactions.length}</p>
-                        <p className="uppercase text-[18px] text-gray-400">Transakcijų sk.</p>
+                        <p className="text-[30px] font-bold">{transactions.length}</p>
+                        <p className="uppercase text-[16px] text-gray-400">Transakcijų sk.</p>
                     </div>
                     <div>
-                        <p className="text-[40px] font-bold">
+                        <p className="text-[30px] font-bold">
                             {transactions.reduce((sum, t) => sum + t.amount, 0).toFixed(2)} €
                         </p>
-                        <p className="uppercase text-[18px] text-gray-400">{totalAmount >= 0 ? 'Pelnas' : 'Nuostolis'}</p>
+                        <p className="uppercase text-[16px] text-gray-400">{totalAmount >= 0 ? 'Pelnas' : 'Nuostolis'}</p>
                     </div>
                 </div>
 
@@ -154,7 +154,7 @@ const Home = () => {
                         valueFormatter: (value) => `${value} €`,
                     }]}
                     width={1000}
-                    height={600}
+                    height={500}
                     grid={{ horizontal: true, vertical: false }}
                     sx={{
                         '.MuiAreaElement-root': {

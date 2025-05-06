@@ -1,121 +1,55 @@
-import {AutomaticTransaction} from "../../../types.ts";
+import {Link} from "react-router-dom";
+import React from "react";
+import {faLock, faLockOpen, faPenToSquare, faTrashCan} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faCoins, faMessage, faStopwatch} from "@fortawesome/free-solid-svg-icons";
-import {useState} from "react";
-import AutomaticTransactionEditForm from "./AutomaticTransactionEditForm";
-import EditAndDeleteIcons from "../../../common/EditAndDeleteIcons";
-import Cookies from "js-cookie";
+import {AutomaticTransaction, Transaction, User} from "../../../types.ts";
+import './styles.css'
 
 const AutomaticTransactionCard = (
     {
         automaticTransaction,
-        handleDelete
+        handleTransactionDelete,
     }:
     {
         automaticTransaction: AutomaticTransaction,
-        handleDelete: (id: string) => void
+        handleTransactionDelete: (id: string) => void,
     }
 ) => {
-    const [automaticTransactionData, setAutomaticTransactionData] = useState(automaticTransaction);
-    const [isEditing, setIsEditing] = useState(false);
 
-    const handleTransactionEdit = async (updatedTransaction: AutomaticTransaction) => {
-        try {
-            const response = await fetch('http://localhost:8080/api/automatic-transactions', {
-                method: "POST",
-                headers: {
-                    "Authorization": `Bearer ${Cookies.get('jwt')}`,
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(
-                    {
-                        id: updatedTransaction.id,
-                        orgUnitId: updatedTransaction.orgUnitId,
-                        amount: updatedTransaction.amount,
-                        title: updatedTransaction.title,
-                        description: updatedTransaction.description && updatedTransaction.description.length == 0 ? null : updatedTransaction.description,
-                        duration: updatedTransaction.duration,
-                        durationUnit: updatedTransaction.durationUnit,
-                    }
-                )
-            });
+    function translateDurationUnit(input: string) {
+        const translations = {
+            'MINUTES': 'minutės',
+            'HOURS': 'valandos',
+            'DAYS': 'dienos'
+        };
 
-            if (response.ok) {
-                setAutomaticTransactionData(updatedTransaction);
-                setIsEditing(false);
-            }
-        } catch(e) {
-            console.error(e);
-        }
+        return translations[input] || input;
     }
 
-    const mapDurationUnitToLT = (): string => {
-        if (automaticTransactionData.durationUnit == 'MINUTES')
-            return 'minutės'
-        if (automaticTransactionData.durationUnit == 'HOURS')
-            return 'valandos'
-        if (automaticTransactionData.durationUnit == 'DAYS')
-            return 'dienos'
-        return ''
-    }
+    return (
+        <div
+            className='flex justify-between bg-white w-full h-[40px] items-center border-b-[2px] border-b-[#eeeeee] hover:shadow-md'>
+            <div className='flex w-full items-center justify-center'>
+                <h3>{automaticTransaction.amount}</h3>
+            </div>
+            <div className='flex w-full items-center justify-center'>
+                <h3>{automaticTransaction.title}</h3>
+            </div>
 
-    return isEditing ? (
-        <AutomaticTransactionEditForm
-            transactionToEdit={automaticTransactionData}
-            handleEdit={handleTransactionEdit}
-        />
-    ) : (
-        <div className='flex flex-col w-11/12 lg:w-4/5 border-b-[3px] p-[20px] gap-5'>
-            <div className='flex flex-row gap-5'>
-                <div className='hidden md:block'>
-                    <FontAwesomeIcon icon={faCoins}/>
-                </div>
-                <div className='flex flex-row text-[20px] items-center justify-center sm:justify-start'>
-                    <h2 className='flex w-[175px]'>kiekis:</h2>
-                    <h2 className={`font-bold ${automaticTransactionData.amount > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                        {automaticTransactionData.amount} €
-                    </h2>
-                </div>
+            <div className='flex w-full items-center justify-center'>
+                <h3>{automaticTransaction.nextTransactionDate}</h3>
             </div>
-            <div className='flex flex-row gap-5'>
-                <div className='hidden md:flex items-center justify-center'>
-                    <FontAwesomeIcon icon={faMessage}/>
-                </div>
-                <div className='flex flex-col justify-start items-start gap-2 text-[20px]'>
-                    <div className='flex flex-row items-start justify-center'>
-                        <h2 className='flex w-[175px]'>Pavadinimas:</h2>
-                        <h2 className='font-bold'>{automaticTransactionData.title}</h2>
-                    </div>
-                    <div className='flex flex-row'>
-                        <h2 className='flex w-[175px]'>Komentaras:</h2>
-                        <h2 className='font-bold'>{automaticTransactionData.description}</h2>
-                    </div>
-                </div>
+
+            <div className='flex w-full items-center justify-center'>
+                <h3>{automaticTransaction.duration} {translateDurationUnit(automaticTransaction.durationUnit)}</h3>
             </div>
-            <div className='flex flex-row gap-5 text-[20px] justify-between'>
-                <div className='flex flex-row gap-5'>
-                    <div className='hidden md:block'>
-                        <FontAwesomeIcon icon={faStopwatch}/>
-                    </div>
-                    <div className='flex flex-row'>
-                        <h2 className='flex w-[175px]'>Trukmė:</h2>
-                        <h2 className='font-bold'>{automaticTransactionData.duration} {mapDurationUnitToLT()}</h2>
-                    </div>
-                </div>
-                <div className='hidden sm:block'>
-                    <EditAndDeleteIcons
-                        handleEditClick={() => setIsEditing(true)}
-                        handleDeleteClick={handleDelete}
-                        transactionId={automaticTransactionData.id}
-                    />
-                </div>
-            </div>
-            <div className='block sm:hidden'>
-                <EditAndDeleteIcons
-                    handleEditClick={() => setIsEditing(true)}
-                    handleDeleteClick={handleDelete}
-                    transactionId={automaticTransactionData.id}
-                />
+
+            <div className='flex gap-5 items-center w-full items-center justify-center'>
+                <Link to={`/automatic-transaction-edit/${automaticTransaction.id}`}>
+                    <FontAwesomeIcon icon={faPenToSquare} className='text-blue-500 cursor-pointer'/>
+                </Link>
+                <FontAwesomeIcon onClick={() => handleTransactionDelete(automaticTransaction.id)} icon={faTrashCan}
+                                 className='text-red-500 cursor-pointer'/>
             </div>
         </div>
     );

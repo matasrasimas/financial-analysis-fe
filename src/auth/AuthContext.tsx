@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import Cookies from "js-cookie";
-import {Organization, OrgUnit, User} from "../types.ts";
+import {Organization, User} from "../types.ts";
 
 const AuthContext = createContext();
 
@@ -8,7 +8,6 @@ export const AuthProvider = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [user, setUser] = useState<User | null>(null);
     const [organization, setOrganization] = useState<Organization | null>(null);
-    const [orgUnit, setOrgUnit] = useState<OrgUnit | null>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -36,7 +35,8 @@ export const AuthProvider = ({ children }) => {
                     const data = await response.json();
                     setIsAuthenticated(true);
                     setUser(data);
-                    const response1 = await fetch(`http://localhost:8080/api/users/${data.id}/organizations`, {
+                    const orgId = Cookies.get("active-org")
+                    const response1 = await fetch(`http://localhost:8080/api/organizations`, {
                         method: "GET",
                         headers: {
                             "Authorization": `Bearer ${token}`,
@@ -46,22 +46,7 @@ export const AuthProvider = ({ children }) => {
                     })
                     if (response1.ok) {
                        const data1 = await response1.json();
-                       setOrganization(data1);
-                        const orgUnitId = Cookies.get("active-org-unit");
-                        const response2 = await fetch(`http://localhost:8080/api/org-units/${orgUnitId}`, {
-                            method: "GET",
-                            headers: {
-                                "Authorization": `Bearer ${token}`,
-                                "Content-Type": "application/json",
-                            },
-                            credentials: "include",
-                        })
-                        if(response2.ok) {
-                            const data2 = await response2.json();
-                            setOrgUnit(data2);
-                        } else {
-                            setOrgUnit(null)
-                        }
+                       setOrganization(data1.find(item => item.id === orgId));
                     } else {
                         setOrganization(null);
                     }
@@ -86,7 +71,7 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, user, setIsAuthenticated, setUser, organization, setOrganization, orgUnit, setOrgUnit, loading }}>
+        <AuthContext.Provider value={{ isAuthenticated, user, setIsAuthenticated, setUser, organization, setOrganization, loading }}>
             {children}
         </AuthContext.Provider>
     );

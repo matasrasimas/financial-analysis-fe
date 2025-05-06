@@ -53,7 +53,7 @@ const TransactionEditForm = ({
 
     return (
         <div className='flex flex-col sm:flex-row w-11/12 lg:w-4/5 border-[3px] p-[20px] justify-between items-center bg-gray-300'>
-            <div className='flex flex-row gap-5 text-[40px] items-center w-1/5 mb-5 sm:mb-0'>
+            <div className='flex flex-row gap-5 text-[30px] items-center w-1/5 mb-5 sm:mb-0'>
                 <div className='hidden sm:block'>
                     <FontAwesomeIcon icon={faCoins}/>
                 </div>
@@ -74,7 +74,7 @@ const TransactionEditForm = ({
                     value={createdTransaction.title}
                     onChange={handleChange}
                     placeholder='Pavadinimas...'
-                    className={`font-bold self-center text-[25px] w-full text-center border-b-3 outline-none appearance-none ${transactionError.title ? 'border-red-500' : 'border-black'}`}
+                    className={`font-bold self-center text-[20px] w-full text-center border-b-3 outline-none appearance-none ${transactionError.title ? 'border-red-500' : 'border-black'}`}
                 />
                 <input
                     type='text'

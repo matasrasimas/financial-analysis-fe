@@ -25,13 +25,13 @@ const PrimaryNavbar = () => {
     };
 
     return (
-        <nav className="flex items-center flex-row bg-[#00473b] w-full h-[48px] relative">
+        <nav className="flex items-center flex-row bg-[#00473b] w-full h-[38px] relative">
             <div
                 className="flex items-center justify-center flex-row border-r-[3px] border-r-[#00373b] w-[390px] h-full gap-5">
                 <div className="lg:block hidden">
-                    <FontAwesomeIcon icon={faChartSimple} className="text-white text-[30px]"/>
+                    <FontAwesomeIcon icon={faChartSimple} className="text-white text-[25px]"/>
                 </div>
-                <h2 className="text-white md:text-[20px] text-[15px] font-bold  font-(family-name:--roboto-font) mx-2">Finansai</h2>
+                <h2 className="text-white text-[20px] font-bold  font-(family-name:--roboto-font) mx-2">Finansai</h2>
             </div>
             <div className="md:hidden flex w-full ml-8 relative h-full">
                 <button onClick={toggleMenu}>
@@ -44,7 +44,7 @@ const PrimaryNavbar = () => {
                             to="/profile"
                             className="flex items-center px-5 border-b-black border-b-[3px] py-1 justify-center hover:font-bold">
                             {user && (
-                                <h3 className="text-white text-[18px] font-(family-name:--roboto-font)">
+                                <h3 className="text-white text-[16px] font-(family-name:--roboto-font)">
                                     {user.firstName} {user.lastName}
                                 </h3>
                             )}
@@ -70,7 +70,7 @@ const PrimaryNavbar = () => {
                     to="/profile"
                     className={({ isActive }) => `flex items-center flex-row gap-2 px-5 hover:bg-(--navbar-item-on-hover-bg) ${isActive && 'bg-(--navbar-item-on-hover-bg)'}`}>
                     <div className="lg:block hidden">
-                        <FontAwesomeIcon icon={faUserCircle} className="text-white text-[25px]"/>
+                        <FontAwesomeIcon icon={faUserCircle} className="text-white text-[20px]"/>
                     </div>
                     {user && (
                         <h3 className="text-white text-[18px] font-(family-name:--roboto-font)">

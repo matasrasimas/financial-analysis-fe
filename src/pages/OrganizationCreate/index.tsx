@@ -60,7 +60,7 @@ const OrganizationCreate = () => {
                 });
                 if (response.ok) {
                     const data = await response.json();
-                    Cookies.set('active-org-unit', data.id)
+                    Cookies.set('active-org', data.id)
                     window.location.href = '/';
                 }
             } catch (error) {

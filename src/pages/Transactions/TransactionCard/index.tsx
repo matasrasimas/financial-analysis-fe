@@ -1,79 +1,91 @@
-import {Transaction} from "../../../types.ts";
+import {Link} from "react-router-dom";
+import React from "react";
+import {faLock, faLockOpen, faPenToSquare, faTrashCan} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faCoins, faPenToSquare, faTrash} from "@fortawesome/free-solid-svg-icons";
-import {useState} from "react";
-import TransactionEditForm from "./TransactionEditForm";
-import Cookies from "js-cookie";
+import {Transaction, User} from "../../../types.ts";
+import './styles.css'
+import {useAuth} from "../../../auth/AuthContext.tsx";
 
-
-const TransactionCard = ({ transaction, handleDelete } : { transaction: Transaction; handleDelete: (id: string) => void }) => {
-    const [transactionData, setTransactionData] = useState(transaction);
-    const [isEditing, setIsEditing] = useState(false);
-
-    const handleTransactionEdit = async (updatedTransaction: Transaction) => {
-        try {
-            const response = await fetch('http://localhost:8080/api/transactions', {
-                method: "POST",
-                headers: {
-                    "Authorization": `Bearer ${Cookies.get('jwt')}`,
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(
-                    [
-                        {
-                            id: updatedTransaction.id,
-                            orgUnitId: updatedTransaction.orgUnitId,
-                            amount: updatedTransaction.amount,
-                            title: updatedTransaction.title,
-                            description: updatedTransaction.description && updatedTransaction.description.length == 0 ? null : updatedTransaction.description,
-                            createdAt: updatedTransaction.createdAt,
-                        }
-                    ]
-                )
-            });
-            if (response.ok) {
-                setTransactionData(updatedTransaction);
-                setIsEditing(false);
-            }
-        } catch(e) {
-            console.error(e);
-        }
+const TransactionCard = (
+    {
+        transaction,
+        handleTransactionDelete,
+        author,
+        handleTransactionLock
+    }:
+    {
+        transaction: Transaction,
+        handleTransactionDelete: (id: string) => void,
+        author: User,
+        handleTransactionLock: (id: string) => void
     }
+) => {
+    const {organization, user} = useAuth()
 
-    return isEditing ? (
-        <TransactionEditForm transactionToEdit={transactionData} handleEdit={handleTransactionEdit} />
-    ) : (
-        <div className='flex flex-col sm:flex-row w-11/12 lg:w-4/5 border-[3px] p-[20px] justify-between items-center'>
-            <div className='flex flex-row gap-5 text-[40px] items-center w-1/5 justify-center sm:justify-start'>
-                <div className='hidden md:block'>
-                    <FontAwesomeIcon icon={faCoins} />
+    return (
+        <div
+            className={`flex justify-between ${transaction.isLocked ? 'bg-gray-300' : 'bg-white'} w-full h-[40px] items-center border-b-[2px] border-b-[#eeeeee] hover:shadow-md`}>
+            <div className='flex w-full items-center justify-center'>
+                <h3>{transaction.amount}</h3>
+            </div>
+            <div className='flex w-full items-center justify-center'>
+                <h3>{transaction.title}</h3>
+            </div>
+
+            <div className='flex w-full items-center justify-center'>
+                <h3>{transaction.createdAt}</h3>
+            </div>
+
+            {author ? (
+                <div className='flex w-full items-center justify-center'>
+                    <h3>{author.firstName} {author.lastName}</h3>
                 </div>
-                <h2 className={`font-bold ${transactionData.amount > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                    {transactionData.amount} €
-                </h2>
-            </div>
-            <div className='flex flex-col justify-between gap-5 sm:mx-5 sm:mb-0 mb-5 w-1/2'>
-                <h2 className='font-bold text-[25px]'>{transactionData.title}</h2>
-                <h2 className='text-[20px]'>{transactionData.description}</h2>
-            </div>
-            <div className='flex flex-col justify-between gap-5 w-1/5 items-end'>
-                <h3 className='text-gray-500 text-[20px]'>{transactionData.createdAt}</h3>
-                <div className='flex flex-row justify-center gap-6'>
-                    <div>
+            ) : (
+                <div className='flex w-full items-center justify-center'>
+                    <h3>Sukurta automatiškai</h3>
+                </div>
+            )}
+
+            <div className='flex gap-5 items-center w-full justify-center'>
+                {(user.id === organization.userId || transaction.userId === user.id) && (
+                    <Link to={`/transaction-edit/${transaction.id}`}>
                         <FontAwesomeIcon
                             icon={faPenToSquare}
-                            className='text-blue-500 text-[30px] cursor-pointer'
-                            onClick={() => setIsEditing(true)}
+                            className={`text-blue-500 ${transaction.isLocked ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                            onClick={(e) => transaction.isLocked && e.preventDefault()} // prevent navigation if locked
                         />
-                    </div>
-                    <div>
+                    </Link>
+                )}
+
+                {(user.id === organization.userId || transaction.userId === user.id) && (
+                    <FontAwesomeIcon
+                        icon={faTrashCan}
+                        onClick={() => {
+                            if (!transaction.isLocked) {
+                                handleTransactionDelete(transaction.id)
+                            }
+                        }}
+                        className={`text-red-500 ${transaction.isLocked ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                    />
+                )}
+
+                {transaction.isLocked && user.id === organization.userId
+                    && (
                         <FontAwesomeIcon
-                            icon={faTrash}
-                            className='text-red-500 text-[30px] cursor-pointer'
-                            onClick={() => handleDelete(transactionData.id)}
+                            icon={faLock}
+                            className='cursor-pointer'
+                            onClick={() => handleTransactionLock(transaction.id)}
                         />
-                    </div>
-                </div>
+                    )}
+
+                {!transaction.isLocked && user.id === organization.userId
+                    && (
+                        <FontAwesomeIcon
+                            icon={faLockOpen}
+                            className='cursor-pointer'
+                            onClick={() => handleTransactionLock(transaction.id)}
+                        />
+                    )}
             </div>
         </div>
     );

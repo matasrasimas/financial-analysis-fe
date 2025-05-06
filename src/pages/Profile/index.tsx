@@ -1,19 +1,16 @@
 import React, {useEffect, useState} from 'react';
 import './styles.css';
-import { FontAwesomeIcon  } from '@fortawesome/react-fontawesome';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {
-    faIdCard,
     faCircleUser,
-    faPhone,
-    faEnvelope
 } from '@fortawesome/free-solid-svg-icons';
-import { } from '@fortawesome/free-solid-svg-icons'
-import {User, UserCreate, UserProfileError} from "../../types.ts";
+import {} from '@fortawesome/free-solid-svg-icons'
+import {User, UserProfileError} from "../../types.ts";
 import {useAuth} from "../../auth/AuthContext.tsx";
 import Cookies from "js-cookie";
 
 const Profile = () => {
-    const { user } = useAuth();
+    const {user, setUser} = useAuth();
 
     const [userProfile, setUserProfile] = useState<User>({
         id: user.id ? user.id : '',
@@ -26,9 +23,9 @@ const Profile = () => {
     const [userProfileError, setUserProfileError] = useState<UserProfileError>({
         firstName: '',
         lastName: '',
-        email: '',
         phoneNumber: '',
     })
+    const [showSnackbar, setShowSnackbar] = useState(false);
 
     const [users, setUsers] = useState<User[]>([]);
 
@@ -56,17 +53,10 @@ const Profile = () => {
     }
 
     const validateFields = () => {
-        let emailError = ''
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userProfile.email))
-            emailError = 'Netinkamas el. paštas'
-        if (users.some(u => u.id !== userProfile.id && u.email === userProfile.email))
-            emailError = 'Naudotojas su tokiu el. paštu jau egzistuoja'
-
-        const errors: UserCreate = {
+        const errors: UserProfileError = {
             firstName: userProfile.firstName ? '' : 'Vardas yra privalomas',
             lastName: userProfile.lastName ? '' : 'Pavardė yra privaloma',
             phoneNumber: userProfile.phoneNumber && !/^\+\d{8,15}$/.test(userProfile.phoneNumber) ? 'Tel. yra neteisingas' : '',
-            email: emailError,
         };
         setUserProfileError(errors);
         return Object.values(errors).every(error => error === '');
@@ -93,7 +83,18 @@ const Profile = () => {
                     )
                 });
                 if (response.status === 204) {
-                    window.location.href = '/';
+                    setUser({
+                        id: userProfile.id,
+                        firstName: userProfile.firstName,
+                        lastName: userProfile.lastName,
+                        email: userProfile.email,
+                        phoneNumber: userProfile.phoneNumber,
+                    });
+                    setShowSnackbar(true); // Show snackbar
+
+                    setTimeout(() => {
+                        setShowSnackbar(false); // Hide after 3s
+                    }, 3000);
                 }
             } catch (error) {
                 console.error("Error submitting form:", error);
@@ -102,100 +103,80 @@ const Profile = () => {
     };
 
     return (
-        <div className='flex flex-col w-full items-center justify-center mt-5'>
-            <h2 className='main-header text-[2em] sm:text-[3em]'>Paskyros konfigūracija</h2>
-            <div className='flex flex-col w-11/12 sm:w-4/5 md:w-3/5 lg:w-2/5 my-8 py-6 items-center bg-stone-300 border-2 border-gray-800 rounded-lg shadow-lg shadow-inner'>
-                <div className='flex flex-col items-center justify-center mb-[50px]'>
-                    <div className="w-11/12 flex items-center justify-center">
-                        <FontAwesomeIcon icon={faCircleUser} className="text-[90px]" />
-                    </div>
-                </div>
-
-                <form className='flex flex-col w-full items-center justify-center' onSubmit={handleSubmit}>
-                    <div className='flex flex-col text-[22px] items-center justify-center w-full h-[80px]'>
-                        <div className='flex flex-row justify-center items-center gap-5'>
-                            <div className='hidden md:block'>
-                                <FontAwesomeIcon icon={faIdCard} className='text-gray-800 text-[30px]'/>
-                            </div>
-                            <div className='flex flex-row items-center w-full gap-3'>
-                                <label htmlFor='firstName' className='font-sans w-24'>Vardas:</label>
-                                <input
-                                    type='text'
-                                    name='firstName'
-                                    value={userProfile.firstName}
-                                    onChange={handleUserProfileChange}
-                                    className={`font-sans font-bold border-b-[3px] focus:outline-none w-[250px] ${userProfileError.firstName ? 'border-red-500' : 'border-black'}`}/>
-                            </div>
-                        </div>
-                        <p className='text-red-500 text-[20px] min-h-[40px]'>{userProfileError.firstName}</p>
-                    </div>
-
-                    <div className='flex flex-col text-[22px] items-center justify-center w-full h-[80px]'>
-                        <div className='flex flex-row justify-center items-center gap-5'>
-                            <div className='hidden md:block'>
-                                <FontAwesomeIcon icon={faIdCard} className='text-gray-800 text-[30px]'/>
-                            </div>
-                            <div className='flex flex-row items-center w-full gap-3'>
-                                <label htmlFor='lastName' className='font-sans w-24'>Pavardė:</label>
-                                <input
-                                    type='text'
-                                    name='lastName'
-                                    value={userProfile.lastName}
-                                    onChange={handleUserProfileChange}
-                                    className={`font-sans font-bold border-b-[3px] focus:outline-none w-[250px] ${userProfileError.lastName ? 'border-red-500' : 'border-black'}`}/>
-                            </div>
-                        </div>
-                        <p className='text-red-500 text-[20px] min-h-[40px]'>{userProfileError.lastName}</p>
-                    </div>
-
-                    <div className='flex flex-col text-[22px] items-center justify-center w-full h-[80px]'>
-                        <div className='flex flex-row justify-center items-center gap-3'>
-                            <div className='hidden md:block'>
-                                <FontAwesomeIcon icon={faPhone} className='text-gray-800 text-[30px]'/>
-                            </div>
-                            <div className='flex flex-row items-center w-full'>
-                                <label htmlFor='phoneNumber' className='font-sans w-24'>Tel. nr:</label>
-                                <input
-                                    type='text'
-                                    name='phoneNumber'
-                                    value={userProfile.phoneNumber}
-                                    onChange={handleUserProfileChange}
-                                    className={`font-sans font-bold border-b-[3px] focus:outline-none w-[250px] ${userProfileError.phoneNumber ? 'border-red-500' : 'border-black'}`}/>
-                            </div>
-                        </div>
-                        <p className='text-red-500 text-[20px] min-h-[40px]'>{userProfileError.phoneNumber}</p>
-                    </div>
-
-                    <div className='flex flex-col text-[22px] items-center justify-center w-full h-[80px]'>
-                        <div className='flex flex-row justify-center items-center gap-3'>
-                            <div className='hidden md:block'>
-                                <FontAwesomeIcon icon={faEnvelope} className='text-gray-800 text-[30px]'/>
-                            </div>
-                            <div className='flex flex-row items-center w-full gap-3'>
-                                <label htmlFor='email' className='font-sans w-24'>El. paštas:</label>
-                                <input
-                                    type='email'
-                                    name='email'
-                                    value={userProfile.email}
-                                    onChange={handleUserProfileChange}
-                                    className={`font-sans font-bold border-b-[3px] focus:outline-none w-[250px] ${userProfileError.email ? 'border-red-500' : 'border-black'}`}/>
-                            </div>
-                        </div>
-                        <p className='text-red-500 text-[20px] min-h-[40px]'>{userProfileError.email}</p>
-                    </div>
-
-
-
-                    <div className='flex flex justify-center items-center w-full my-5'>
-                        <button
-                            type='submit'
-                            className='bg-black w-[200px] h-[50px] text-white font-bold text-[20px] rounded-md cursor-pointer hover:text-yellow-500'>
-                            Saugoti
-                        </button>
-                    </div>
-                </form>
+        <div className="flex flex-col w-full items-center h-full">
+            <div className="flex flex-col w-4/5 items-start justify-center my-5">
 
             </div>
+            <div className='profile-container'>
+                <div className='flex flex-col w-full mt-10 items-center'>
+                    <FontAwesomeIcon icon={faCircleUser} className="text-[120px]"/>
+                    <div className='flex flex-col w-4/5 mt-3 items-center justify-center'>
+                        <h2 className='full-name-text text-center whitespace-normal break-words w-full'>{user.firstName} {user.lastName}</h2>
+                        <h2 className='email-text'>{user.email}</h2>
+                    </div>
+                </div>
+                <div className='h-full w-[2px] bg-gray-200'></div>
+                <div className='flex flex-col w-full mt-5'>
+                    <h2 className='profile-header'>Paskyros nustatymai</h2>
+                    <form onSubmit={handleSubmit} className='flex flex-col w-full mt-5 gap-1 px-5'>
+
+                        <div className='flex w-full flex-col w-full items-start h-[80px]'>
+                            <label className='profile-input-label' htmlFor='firstName'>Vardas:</label>
+                            <input
+                                type='text'
+                                className={`profile-input ${userProfileError.firstName ? 'border-red-500 border-[1px]' : 'border-[#dddddd] border-[1px]'}`}
+                                name='firstName'
+                                value={userProfile.firstName}
+                                onChange={handleUserProfileChange}
+                            />
+                            {userProfileError.firstName && (
+                                <p className='text-red-500 text-[14px]'>{userProfileError.firstName}</p>
+                            )}
+                        </div>
+
+                        <div className='flex w-full flex-col w-full items-start h-[80px]'>
+                            <label className='profile-input-label' htmlFor='lastName'>Pavardė:</label>
+                            <input
+                                type='text'
+                                className={`profile-input ${userProfileError.lastName ? 'border-red-500 border-[1px]' : 'border-[#dddddd] border-[1px]'}`}
+                                name='lastName'
+                                value={userProfile.lastName}
+                                onChange={handleUserProfileChange}
+                            />
+                            {userProfileError.lastName && (
+                                <p className='text-red-500 text-[14px]'>{userProfileError.lastName}</p>
+                            )}
+                        </div>
+
+                        <div className='flex w-full flex-col w-full items-start h-[80px]'>
+                            <label className='profile-input-label' htmlFor='phoneNumber'>Tel. nr:</label>
+                            <input
+                                type='text'
+                                className={`profile-input ${userProfileError.phoneNumber ? 'border-red-500 border-[1px]' : 'border-[#dddddd] border-[1px]'}`}
+                                name='phoneNumber'
+                                value={userProfile.phoneNumber}
+                                onChange={handleUserProfileChange}
+                            />
+                            {userProfileError.phoneNumber && (
+                                <p className='text-red-500 text-[14px]'>{userProfileError.phoneNumber}</p>
+                            )}
+                        </div>
+
+                        <div className='flex flex justify-center items-center w-full my-5'>
+                            <button
+                                type='submit'
+                                className='bg-[#00592b] w-[125px] h-[40px] text-white font-bold text-[16px] rounded-md cursor-pointer hover:text-yellow-500'>
+                                Saugoti
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            {showSnackbar && (
+                <div className="snackbar">
+                    Profilis sėkmingai atnaujintas!
+                </div>
+            )}
         </div>
     );
 }

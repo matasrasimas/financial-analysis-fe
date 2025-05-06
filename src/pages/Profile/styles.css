@@ -1,0 +1,72 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+.profile-container {
+    display: flex;
+    left: 0;
+    height: 80%;
+    width: 80%;
+    /*margin-top: 10px;*/
+    /*margin-bottom: 10px;*/
+    flex-direction: row;
+    background-color: white;
+    box-shadow: 0 0 10px #ccc;
+}
+
+.profile-header {
+    font-family: 'Roboto', sans-serif;
+    font-size: 25px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    color: #00592b;
+}
+
+.full-name-text {
+    font-family: 'Roboto', sans-serif;
+    font-size: 25px;
+    font-weight: bold;
+}
+.email-text {
+    font-family: 'Roboto', sans-serif;
+    font-size: 20px;
+    color: #999999;
+}
+.profile-input-label {
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    color: #00392b;
+    letter-spacing: 1px;
+    font-weight: 500;
+}
+.profile-input {
+    width: 100%;
+    font-family: 'Roboto', sans-serif;
+    color: #555555;
+    padding-left: 10px;
+    height: 30px;
+    box-shadow: 0 0 5px #ccc;
+}
+.snackbar {
+    position: fixed;
+    top: 20px;
+    right: -300px;
+    background-color: #38a169; /* green */
+    color: white;
+    padding: 16px 24px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    z-index: 9999;
+    animation: slideIn 0.5s forwards, fadeOut 0.5s ease-out 2.5s forwards;
+}
+
+@keyframes slideIn {
+    to {
+        right: 20px;
+    }
+}
+
+@keyframes fadeOut {
+    to {
+        opacity: 0;
+        right: -300px;
+    }
+}

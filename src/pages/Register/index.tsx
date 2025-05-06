@@ -103,24 +103,24 @@ const Register = () => {
 
     return (
         <div className='flex flex-row justify-center bg-[#00b795] w-full h-screen items-center'>
-            <div className='flex flex-col w-[500px] h-[750px] bg-white'>
+            <div className='flex flex-col w-[500px] h-[620px] bg-white'>
 
-                <div className='flex w-full h-[50px] bg-[#00574b] items-center justify-center'>
-                    <h2 className='text-white font-bold font-sans text-[20px]'>Registracija</h2>
+                <div className='flex w-full h-[35px] bg-[#00574b] items-center justify-center'>
+                    <h2 className='text-white font-bold font-sans text-[16px]'>Registracija</h2>
                 </div>
 
-                <form onSubmit={handleSubmit} className='flex flex-col gap-2 my-5'>
-                    <div className='flex flex-col h-[80px] bg-white'>
-                        <div className='flex flex-row w-full h-[50px] px-8'>
-                            <div className='bg-[#00574b] w-[50px] h-full flex justify-center items-center'>
-                                <FontAwesomeIcon icon={faUser} className='text-white text-[22px]' />
+                <form onSubmit={handleSubmit} className='flex flex-col gap-2 mt-5'>
+                    <div className='flex flex-col h-[70px] bg-white'>
+                        <div className='flex flex-row w-full h-[40px] px-8'>
+                            <div className='bg-[#00574b] w-[40px] h-full flex justify-center items-center'>
+                                <FontAwesomeIcon icon={faUser} className='text-white text-[20px]' />
                             </div>
                             <input
                                 type='text'
                                 name='firstName'
                                 value={user.firstName}
                                 onChange={handleInputChange}
-                                className={`w-full h-full border-2 pl-5 text-[20px] ${userError.firstName ? 'border-red-500' : 'border-gray-500'}`}
+                                className={`w-full h-full border-2 pl-5 text-[16px] ${userError.firstName ? 'border-red-500' : 'border-gray-500'}`}
                                 placeholder='Vardas'
                             />
                         </div>
@@ -129,17 +129,17 @@ const Register = () => {
                         )}
                     </div>
 
-                    <div className='flex flex-col h-[80px] bg-white'>
-                        <div className='flex flex-row w-full h-[50px] px-8'>
-                            <div className='bg-[#00574b] w-[50px] h-full flex justify-center items-center'>
-                                <FontAwesomeIcon icon={faUser} className='text-white text-[22px]' />
+                    <div className='flex flex-col h-[70px] bg-white'>
+                        <div className='flex flex-row w-full h-[40px] px-8'>
+                            <div className='bg-[#00574b] w-[40px] h-full flex justify-center items-center'>
+                                <FontAwesomeIcon icon={faUser} className='text-white text-[20px]' />
                             </div>
                             <input
                                 type='text'
                                 name='lastName'
                                 value={user.lastName}
                                 onChange={handleInputChange}
-                                className={`w-full h-full border-2 pl-5 text-[20px] ${userError.lastName ? 'border-red-500' : 'border-gray-500'}`}
+                                className={`w-full h-full border-2 pl-5 text-[16px] ${userError.lastName ? 'border-red-500' : 'border-gray-500'}`}
                                 placeholder='Pavardė'
                             />
                         </div>
@@ -148,17 +148,17 @@ const Register = () => {
                         )}
                     </div>
 
-                    <div className='flex flex-col h-[80px] bg-white'>
-                        <div className='flex flex-row w-full h-[50px] px-8'>
-                            <div className='bg-[#00574b] w-[50px] h-full flex justify-center items-center'>
-                                <FontAwesomeIcon icon={faPhone} className='text-white text-[22px]' />
+                    <div className='flex flex-col h-[70px] bg-white'>
+                        <div className='flex flex-row w-full h-[40px] px-8'>
+                            <div className='bg-[#00574b] w-[40px] h-full flex justify-center items-center'>
+                                <FontAwesomeIcon icon={faPhone} className='text-white text-[20px]' />
                             </div>
                             <input
                                 type='text'
                                 name='phoneNumber'
                                 value={user.phoneNumber}
                                 onChange={handleInputChange}
-                                className={`w-full h-full border-2 pl-5 text-[20px] ${userError.phoneNumber ? 'border-red-500' : 'border-gray-500'}`}
+                                className={`w-full h-full border-2 pl-5 text-[16px] ${userError.phoneNumber ? 'border-red-500' : 'border-gray-500'}`}
                                 placeholder='Tel. nr'
                             />
                         </div>
@@ -167,17 +167,17 @@ const Register = () => {
                         )}
                     </div>
 
-                    <div className='flex flex-col h-[80px] bg-white'>
-                        <div className='flex flex-row w-full h-[50px] px-8'>
-                            <div className='bg-[#00574b] w-[50px] h-full flex justify-center items-center'>
-                                <FontAwesomeIcon icon={faEnvelope} className='text-white text-[22px]' />
+                    <div className='flex flex-col h-[70px] bg-white'>
+                        <div className='flex flex-row w-full h-[40px] px-8'>
+                            <div className='bg-[#00574b] w-[40px] h-full flex justify-center items-center'>
+                                <FontAwesomeIcon icon={faEnvelope} className='text-white text-[20px]' />
                             </div>
                             <input
                                 type='email'
                                 name='email'
                                 value={user.email}
                                 onChange={handleInputChange}
-                                className={`w-full h-full border-2 pl-5 text-[20px] ${userError.email ? 'border-red-500' : 'border-gray-500'}`}
+                                className={`w-full h-full border-2 pl-5 text-[16px] ${userError.email ? 'border-red-500' : 'border-gray-500'}`}
                                 placeholder='El. paštas'
                             />
                         </div>
@@ -186,17 +186,17 @@ const Register = () => {
                         )}
                     </div>
 
-                    <div className='flex flex-col h-[80px] bg-white'>
-                        <div className='flex flex-row w-full h-[50px] px-8'>
-                            <div className='bg-[#00574b] w-[50px] h-full flex justify-center items-center'>
-                                <FontAwesomeIcon icon={faLock} className='text-white text-[22px]' />
+                    <div className='flex flex-col h-[70px] bg-white'>
+                        <div className='flex flex-row w-full h-[40px] px-8'>
+                            <div className='bg-[#00574b] w-[40px] h-full flex justify-center items-center'>
+                                <FontAwesomeIcon icon={faLock} className='text-white text-[20px]' />
                             </div>
                             <input
                                 type='password'
                                 name='password'
                                 value={user.password}
                                 onChange={handleInputChange}
-                                className={`w-full h-full border-2 pl-5 text-[20px] ${userError.password ? 'border-red-500' : 'border-gray-500'}`}
+                                className={`w-full h-full border-2 pl-5 text-[16px] ${userError.password ? 'border-red-500' : 'border-gray-500'}`}
                                 placeholder='Slaptažodis'
                             />
                         </div>
@@ -205,17 +205,17 @@ const Register = () => {
                         )}
                     </div>
 
-                    <div className='flex flex-col h-[80px] bg-white'>
-                        <div className='flex flex-row w-full h-[50px] px-8'>
-                            <div className='bg-[#00574b] w-[50px] h-full flex justify-center items-center'>
-                                <FontAwesomeIcon icon={faLock} className='text-white text-[22px]' />
+                    <div className='flex flex-col h-[70px] bg-white'>
+                        <div className='flex flex-row w-full h-[40px] px-8'>
+                            <div className='bg-[#00574b] w-[40px] h-full flex justify-center items-center'>
+                                <FontAwesomeIcon icon={faLock} className='text-white text-[20px]' />
                             </div>
                             <input
                                 type='password'
                                 name='repeatPassword'
                                 value={user.repeatPassword}
                                 onChange={handleInputChange}
-                                className={`w-full h-full border-2 pl-5 text-[20px] ${userError.repeatPassword ? 'border-red-500' : 'border-gray-500'}`}
+                                className={`w-full h-full border-2 pl-5 text-[16px] ${userError.repeatPassword ? 'border-red-500' : 'border-gray-500'}`}
                                 placeholder='Pakartoti slaptažodį'
                             />
                         </div>
@@ -228,14 +228,14 @@ const Register = () => {
                     <div className='flex flex justify-center items-center w-full mb-5'>
                         <button
                             type='submit'
-                            className='bg-[#00574b] w-[200px] h-[50px] text-white font-bold text-[20px] rounded-md cursor-pointer hover:text-yellow-500'
+                            className='bg-[#00574b] w-[150px] h-[30px] text-white font-bold text-[16px] rounded-md cursor-pointer hover:text-yellow-500'
                         >
                             Kurti paskyrą
                         </button>
                     </div>
                 </form>
 
-                <div className='flex flex-row w-full px-5 text-[20px] gap-2 items-center justify-center'>
+                <div className='flex flex-row w-full px-5 text-[16px] gap-2 items-center justify-center'>
                     <h2 className='break-words whitespace-normal'>Jau turite paskyrą?
                     </h2>
                     <Link
