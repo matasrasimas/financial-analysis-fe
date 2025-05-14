@@ -188,7 +188,7 @@ const ImageTransactions = () => {
 
                 <form onSubmit={handleFileSubmit} className='flex flex-col w-full'>
                     <div className="flex flex-col items-center gap-4">
-                        <label htmlFor="image-upload" className="cursor-pointer px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl shadow-md transition duration-300 flex items-center gap-2">
+                        <label id='file-upload' htmlFor="image-upload" className="cursor-pointer px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl shadow-md transition duration-300 flex items-center gap-2">
                             <FontAwesomeIcon icon={faUpload} />
                             Pasirinkti failą
                         </label>
@@ -222,6 +222,7 @@ const ImageTransactions = () => {
                     {imageFile && (
                         <div className='flex flex justify-center items-center mt-10'>
                             <button
+                                id='generate-transactions-btn'
                                 type='submit'
                                 className='bg-black w-[200px] h-[45px] text-white font-bold text-[16px] rounded-md cursor-pointer hover:text-yellow-500'>
                                 Generuoti transakcijas
@@ -295,6 +296,7 @@ const ImageTransactions = () => {
                             ))}
                             <div className='flex justify-center items-center my-5'>
                                 <button
+                                    id='create-transactions-btn'
                                     type='submit'
                                     className='bg-green-800 w-[200px] h-[45px] text-white font-bold text-[16px] rounded-md cursor-pointer hover:text-yellow-500'>
                                     Kurti transakcijas

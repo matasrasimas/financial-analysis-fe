@@ -6,7 +6,6 @@ import {faPlus} from "@fortawesome/free-solid-svg-icons";
 import {Link} from "react-router-dom";
 import {useAuth} from "../../auth/AuthContext.tsx";
 import Cookies from "js-cookie";
-import {GenerateContentResponse, GoogleGenAI} from "@google/genai";
 import './styles.css'
 
 const Transactions = () => {

@@ -74,7 +74,7 @@ const Login = () => {
                     <h2 className='text-white font-bold font-sans text-[16px]'>Prisijungimas</h2>
                 </div>
 
-                <form className='flex flex-col gap-3 mt-10' onSubmit={handleSubmit}>
+                <form id="login-form" className='flex flex-col gap-3 mt-10' onSubmit={handleSubmit}>
                     <div className='flex flex-col w-full h-[70px]'>
                         <div className='flex flex-row w-full h-[40px] px-8'>
                             <div className='bg-[#00574b] w-[40px] h-full flex justify-center items-center'>
@@ -109,12 +109,13 @@ const Login = () => {
                             />
                         </div>
                         {userLoginError.password && (
-                            <p className='text-red-500 text-md mt-1 px-2'>{userLoginError.password}</p>
+                            <p id='login-error-text' className='text-red-500 text-md mt-1 px-2'>{userLoginError.password}</p>
                         )}
                     </div>
 
                     <div className='flex flex justify-center items-center w-full mb-5'>
                         <button
+                            id='login-btn'
                             type='submit'
                             className='bg-[#00574b] w-[150px] h-[30px] text-white font-bold text-[16px] rounded-md cursor-pointer hover:text-yellow-500'>
                             Prisijungti

@@ -174,6 +174,7 @@ const TransactionCreate = () => {
                         Atšaukti
                     </Link>
                     <button
+                        id='transaction-create-btn'
                         type='submit'
                         className='bg-[#00592b] w-[125px] h-[40px] text-white font-bold text-[16px] rounded-md cursor-pointer hover:text-yellow-500 self-end'>
                         Kurti
